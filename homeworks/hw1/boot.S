@@ -1,29 +1,51 @@
+#include "gdt.h"
+#include "multiboot.h"
+#include "paging.h"
+
 .intel_syntax noprefix
-
-.set ALIGN,    1<<0
-.set MEMINFO,  1<<1
-.set FLAGS,    ALIGN | MEMINFO
-.set MAGIC,    0x1BADB002
-.set CHECKSUM, -(MAGIC + FLAGS)
-
-.set FIRSTMB,      0x100000
-.set PML4_ADDR,    FIRSTMB
-.set PDPT_ADDR,    FIRSTMB + 0x1000
-.set GDT_64_ADDR,  FIRSTMB + 0x2000
-.set STACK,        FIRSTMB + 0x4000
-
-.set GDT_P, (1<<15)
-.set GDT_S, (1<<12)
-.set GDT_G, (1<<23)
-.set GDT_L, (1<<21)
 
 # .multiboot section defines Multiboot 2 compatible header.
 .section .multiboot
-    .align 4
-    .long MAGIC
-    .long FLAGS
-    .long CHECKSUM
+    .long MULTIBOOT_MAGIC
+    .long MULTIBOOT_ARCH_32
+    .long HEADER_LEN
+    .long -(MULTIBOOT_MAGIC + MULTIBOOT_ARCH_32 + HEADER_LEN)
 
+    .word MULTIBOOT_TAG_END
+    .word 0
+    .long 8
+
+    .set HEADER_LEN, . - .multiboot
+
+# Section .bss contains zero-filled data. It doesn't appear in ELF file, but filled during image load.
+.section .bss
+    .Lpml4:
+        .zero 4096
+    .Lpdpt:
+        .zero 4096
+    .Lbootstrap_stack:
+        .zero 4096
+
+
+# Section .data contains some global variables.
+.section .data
+    # Setup GDT for 64-bit mode.
+    .Lgdt64:
+        # 0: null segment.
+        .long 0
+        .long 0
+
+        # 1: 64-bit code segment.
+        .long 0xFFFF
+        # (0xF << 16) fills base 31:24.
+        .long GDT_GRANULARITY | GDT_LONG | GDT_PRESENT | GDT_SYSTEM | (1<<11) | GDT_READ | (0xF << 16)
+
+    .Lgdt64_ptr:
+        .word . - .Lgdt64
+        .long .Lgdt64
+
+
+# kernel_main symbol is declared outside this file.
 .extern kernel_main
 
 .section .text
@@ -33,27 +55,29 @@
     _start:
     # Tell assembler, that we are running 32-bit protected mode.
     .code32
+        # Our kernel just loaded, current processor state is described in "I386 machine state" section of Multiboot2 specification.
+
+        # TODO: here you need remember pointer to Multiboot2 information structure and later pass it to the multiboot_init() function.
+        # It's up to you how to save pointer: you can use stack, register or store it in .data section.
+
+
         # To enable long mode, we need to setup basic paging.
         # Here we setup identity mapping for the first gigabyte.
 
-        # Clear physical frames for PML4, PDPT and GDT.
-        mov edi, FIRSTMB
-        mov al, 0x0
-        mov ecx, 3*0x1000
-        rep stosb
-
         # PML4[0] = PDPT_addr | FLAG_PRESENT
-        mov edi, PML4_ADDR
-        mov dword ptr [edi], PDPT_ADDR | 1<<0
+        lea edi, .Lpml4
+        lea eax, .Lpdpt
+        or eax, PTE_PRESENT
+        mov dword ptr [edi], eax
 
         # PDPT[0] = 0 | PTE_PAGE_SIZE | PTE_PRESENT
-        mov edi, PDPT_ADDR
-        mov dword ptr [edi], 1<<7 | 1<<0
+        lea edi, .Lpdpt
+        mov dword ptr [edi], PTE_PAGE_SIZE | PTE_PRESENT
 
         # Enabling 64-bit mode is described in ISDM, Volume 3A, Section 9.8.5.
 
         # Write PML4 physical address into CR3.
-        mov eax, PML4_ADDR
+        lea eax, .Lpml4
         mov cr3, eax
 
         # Set PAE bit in CR4.
@@ -72,40 +96,17 @@
         or eax, 1<<31
         mov cr0, eax
 
-        # == Setup GDT for 64-bit mode ==
+        # Load GDT with 64-bit code segment.
+        lgdt .Lgdt64_ptr
 
-        mov ebx, GDT_64_ADDR
-
-        # Null segment.
-        mov dword ptr [ebx], 0
-        mov dword ptr [ebx + 4], 0
-        add ebx, 8
-
-        # 1: code segment.
-        mov dword ptr [ebx], 0xFFFF
-        mov dword ptr [ebx + 4], GDT_G | GDT_L | GDT_P | GDT_S | (1<<11) | (1<<9) | (0xF << 16)
-        add ebx, 8
-
-        # 2: TSS, for now it will be kind of magic.
-        mov dword ptr [ebx], 0x00000068
-        mov dword ptr [ebx + 4], 0x00CF8900
-        add ebx, 8
-
-        # GDT pointer.
-        mov word ptr [ebx], 3*8
-        mov dword ptr [ebx + 2], GDT_64_ADDR
-
-        # Load new GDT.
-        lgdt [GDT_64_ADDR + 3*8]
-
-        ljmp 0x8:.ret
-    .ret:
+        # Load prepared code segment with index 1 with RPL=0 from GDT: segment selector is 0b1000 = 0x8.
+        ljmp 0x8:.Lret
+    .Lret:
         # We we are now running 64-bit mode. Yay!
     .code64
-        # Setup simple stack and call kernel_main.
-        mov rsp, STACK
+        # Setup booststrap stack and call kernel_main.
+        lea rsp, .Lbootstrap_stack
         call kernel_main
-
 
         # Halt processor, i.e. put it in a such state that next instruction will be executed only after interrupt.
         # Effectively it means inifinite non-busy loop.

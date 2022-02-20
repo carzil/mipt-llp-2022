@@ -7,32 +7,39 @@ static u64 vga_row;
 static u64 vga_column;
 static volatile u16* vga_buffer;
 
-void vga_initialize(void) {
+static inline u64 vga_index(u64 row, u64 col) {
+    return row * VGA_WIDTH + col;
+}
+
+void vga_init(void) {
     vga_row = 0;
     vga_column = 0;
     u8 color = vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
     vga_buffer = (u16*)0xB8000;
-    for (u64 y = 0; y < VGA_HEIGHT; y++) {
-        for (u64 x = 0; x < VGA_WIDTH; x++) {
-            const u64 index = y * VGA_WIDTH + x;
-            vga_buffer[index] = vga_entry(' ', color);
+    for (u64 row = 0; row < VGA_HEIGHT; row++) {
+        for (u64 col = 0; col < VGA_WIDTH; col++) {
+            vga_buffer[vga_index(row, col)] = vga_entry(' ', color);
         }
     }
 }
 
-void vga_putentryat(char c, u8 color, u64 x, u64 y) {
-    const u64 index = y * VGA_WIDTH + x;
-    vga_buffer[index] = vga_entry(c, color);
+void vga_putentryat(char c, u8 color, u64 row, u64 col) {
+    vga_buffer[vga_index(row, col)] = vga_entry(c, color);
+}
+
+// TODO: vga_newline_and_return should support terminal scrolling.
+static void vga_newline_and_return() {
+    vga_row++;
+    if (vga_row == VGA_HEIGHT) {
+        vga_row = 0;
+    }
+    vga_column = 0;
 }
 
 void vga_putchar_color(char c, u8 color) {
     switch (c) {
     case '\n':
-        vga_row++;
-        vga_column = 0;
-        if (vga_row == VGA_HEIGHT) {
-            vga_row = 0;
-        }
+        vga_newline_and_return();
         break;
 
     case '\r':
@@ -40,14 +47,10 @@ void vga_putchar_color(char c, u8 color) {
         break;
 
     default:
-        vga_putentryat(c, color, vga_column, vga_row);
+        vga_putentryat(c, color, vga_row, vga_column);
         vga_column++;
         if (vga_column == VGA_WIDTH) {
-            vga_column = 0;
-            vga_row++;
-            if (vga_row == VGA_HEIGHT) {
-                vga_row = 0;
-            }
+            vga_newline_and_return();
         }
     }
 }
