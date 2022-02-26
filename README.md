@@ -14,6 +14,7 @@
 1. [Вводная](lectures/00-intro/main.pdf)
 1. [Обзор x86-64](lectures/01-x86-64-overview/main.pdf)
 1. Лекция-семинар. Multiboot2 и загрузка ОС.
+1. [Прерывания процессора](lectures/03-interrupts/main.pdf)
 
 # Домашние задания
 
