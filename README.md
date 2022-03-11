@@ -11,14 +11,15 @@
 * [QEMU docs](https://qemu-project.gitlab.io/qemu/system/monitor.html)
 
 ## Лекции
-1. [Вводная](lectures/00-intro/main.pdf)
-1. [Обзор x86-64](lectures/01-x86-64-overview/main.pdf)
+1. [Вводная](lectures/00-intro/main.pdf).
+1. [Обзор x86-64](lectures/01-x86-64-overview/main.pdf).
 1. Лекция-семинар. Multiboot2 и загрузка ОС.
-1. [Прерывания процессора](lectures/03-interrupts/main.pdf)
+1. [Прерывания процессора](lectures/03-interrupts/main.pdf).
+1. Лекция-семинар. Прерывания процессора, ACPI, APIC.
 
 # Домашние задания
 
-Табличка с проверкой ДЗ появится чуть позже.
+[Табличка с результатами проверки ДЗ](https://docs.google.com/spreadsheets/d/1nR7B1dQMwmAK9gzDFhuoJcE5jKRsJr6OF5HHe2WJEBo/edit?usp=sharing).
 
 1. [Первые шаги](homeworks/hw1/README.md), ***дедлайн: 04.03.2022 23:59***
 
