@@ -1,6 +1,6 @@
-AS=/home/carzil/build/cross/bin/x86_64-elf-gcc
-CC=/home/carzil/build/cross/bin/x86_64-elf-gcc
-LD=/home/carzil/build/cross/bin/x86_64-elf-gcc
+AS=x86_64-elf-gcc
+CC=x86_64-elf-gcc
+LD=x86_64-elf-gcc
 AS_FLAGS=-c -g
 CC_FLAGS=-mno-mmx -mno-sse -mno-sse2 -fno-pie -c -g -mno-red-zone -std=gnu99 -ffreestanding -Wall -Wextra
 LD_FLAGS=
