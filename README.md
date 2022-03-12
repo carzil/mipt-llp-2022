@@ -16,6 +16,7 @@
 1. Лекция-семинар. Multiboot2 и загрузка ОС.
 1. [Прерывания процессора](lectures/03-interrupts/main.pdf).
 1. Лекция-семинар. Прерывания процессора, ACPI, APIC.
+1. [Управление памятью](lectures/05-memory-management/main.pdf).
 
 ## Домашние задания
 
