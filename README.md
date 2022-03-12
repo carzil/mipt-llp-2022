@@ -21,7 +21,8 @@
 
 [Табличка с результатами проверки ДЗ](https://docs.google.com/spreadsheets/d/1nR7B1dQMwmAK9gzDFhuoJcE5jKRsJr6OF5HHe2WJEBo/edit?usp=sharing).
 
-1. [Первые шаги](homeworks/hw1/README.md), ***дедлайн: 04.03.2022 23:59***
+1. [Домашнее задание №1](homeworks/hw1/README.md), ***дедлайн: 04.03.2022 23:59***.
+1. [Домашнее задание №2](homeworks/hw2/README.md), ***дедлайн: 25.03.2022 23:49***.
 
 ### Оформление домашних заданий
 Заведите себе отдельный *приватный* репозиторий на Github добавляете в коллабораторы @carzil и @eaglemango, затем заполните [форму](https://forms.gle/7o2HqnS2MthsdUXp7).

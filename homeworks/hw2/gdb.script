@@ -1,0 +1,6 @@
+target remote :1234
+symbol-file kernel.sym
+layout regs
+focus cmd
+b _start
+c
