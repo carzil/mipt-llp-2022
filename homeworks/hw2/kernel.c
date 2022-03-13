@@ -39,6 +39,4 @@ void kernel_main() {
     dump_mmap();
 
     irq_enable();
-
-    *(volatile char*)0x0 = '\0';
 }
