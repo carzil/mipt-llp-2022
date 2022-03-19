@@ -36,7 +36,7 @@ void df_handler(struct irqctx_errcode* ctx) {
     // TODO: print information about context: error code, RIP and dump general-purpose registers.
 }
 
-void ud_handler(struct irqctx_errcode* ctx) {
+void ud_handler(struct irqctx* ctx) {
     // TODO: print information about context: error code, RIP and dump general-purpose registers.
 }
 
