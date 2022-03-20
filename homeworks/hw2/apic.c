@@ -124,8 +124,8 @@ void apic_init() {
     }
 
     // Disable old PIC.
-    outb(0x20 + 1, 0xFF);
-    outb(0xA0 + 1, 0xFF);
+    outb(0x21, 0xff);
+    outb(0xa1, 0xff);
 
     // Enable APIC, by setting spurious interrupt vector and APIC Software Enabled/Disabled flag.
     lapic_write(APIC_SPURIOUS, 39 | APIC_SW_ENABLE);

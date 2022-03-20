@@ -37,12 +37,12 @@ build: .c-depend .S-depend $(C_OBJS) $(ASM_OBJS) linker.ld
 .c-depend: $(C_SOURCES)
 	rm -f ./.depend.c
 	$(CC) $(CCFLAGS) -MM $^ > ./.c-depend
-	$(SED) -i -E 's/^\(.*\)\.o/\1.c.o/g' .c-depend
+	$(SED) -i 's/^\(.*\)\.o/\1.c.o/g' .c-depend
 
 .S-depend: $(ASM_SOURCES)
 	rm -f ./.depend.S
 	$(CC) $(CCFLAGS) -MM $^ > ./.S-depend
-	$(SED) -i -E 's/^\(.*\)\.o/\1.S.o/g' .S-depend
+	$(SED) -i 's/^\(.*\)\.o/\1.S.o/g' .S-depend
 
 clean:
 	rm -f *.o

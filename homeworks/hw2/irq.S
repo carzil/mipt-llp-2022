@@ -92,7 +92,7 @@ _irq_entry_\entry:
         .long .Lidt
 
 .section .text
-    IRQ_ENTRY ERRCODE   ud_handler
+    IRQ_ENTRY NOERRCODE ud_handler
     IRQ_ENTRY ERRCODE   df_handler
     IRQ_ENTRY ERRCODE   ts_handler
     IRQ_ENTRY ERRCODE   np_handler
