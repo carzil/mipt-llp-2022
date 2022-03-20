@@ -3,11 +3,15 @@
 #include "types.h"
 #include "panic.h"
 
-extern struct multiboot_info* _multiboot_info;
+extern uint32_t _multiboot_info;
 static struct multiboot_mmap_tag* mmap_tag;
 
+static struct multiboot_info* multiboot_info() {
+    return (struct multiboot_info*)(uint64_t)_multiboot_info;
+}
+
 struct multiboot_tag* multiboot_lookup_tag(uint32_t tag_code) {
-    struct multiboot_tag* tag = &_multiboot_info->first_tag;
+    struct multiboot_tag* tag = &multiboot_info()->first_tag;
     for (;;) {
         if (tag->type == MULTIBOOT_TAG_END) {
             return NULL;
@@ -34,7 +38,7 @@ void multiboot_init() {
         panic("bootloader didn't provide memory map");
     }
 
-    printk("parsed multiboot info at %p, total_size=%d\n", _multiboot_info, _multiboot_info->total_size);
+    printk("parsed multiboot info at %p, total_size=%d\n", _multiboot_info, multiboot_info()->total_size);
 }
 
 void multiboot_mmap_iter_init(struct multiboot_mmap_iter* it) {
