@@ -23,7 +23,7 @@
 [Табличка с результатами проверки ДЗ](https://docs.google.com/spreadsheets/d/1nR7B1dQMwmAK9gzDFhuoJcE5jKRsJr6OF5HHe2WJEBo/edit?usp=sharing).
 
 1. [Домашнее задание №1](homeworks/hw1/README.md), ***дедлайн: 04.03.2022 23:59***.
-1. [Домашнее задание №2](homeworks/hw2/README.md), ***дедлайн: 25.03.2022 23:59***.
+1. [Домашнее задание №2](homeworks/hw2/README.md), ***дедлайн: 27.03.2022 23:59***.
 1. [Домашнее задание №3](homeworks/hw3/README.md), ***дедлайн: 08.04.2022 23:59***.
 
 ### Оформление домашних заданий
