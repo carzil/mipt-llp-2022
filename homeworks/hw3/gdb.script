@@ -1,0 +1,7 @@
+target remote :1234
+set confirm off
+symbol-file kernel.sym
+layout src
+focus cmd
+b vmem_map_page
+c
