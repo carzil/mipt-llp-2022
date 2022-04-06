@@ -1,4 +1,5 @@
 #include "vga.h"
+#include "mm/paging.h"
 
 static const u64 VGA_WIDTH = 80;
 static const u64 VGA_HEIGHT = 25;
@@ -15,7 +16,7 @@ void vga_init(void) {
     vga_row = 0;
     vga_column = 0;
     u8 color = vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
-    vga_buffer = (u16*)0xB8000;
+    vga_buffer = PHYS_TO_VIRT((u16*)0xB8000);
     for (u64 row = 0; row < VGA_HEIGHT; row++) {
         for (u64 col = 0; col < VGA_WIDTH; col++) {
             vga_buffer[vga_index(row, col)] = vga_entry(' ', color);

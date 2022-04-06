@@ -36,7 +36,7 @@
         # (0xF << 16) fills base 31:24.
         .long GDT_GRANULARITY | GDT_LONG | GDT_PRESENT | GDT_SYSTEM | (1<<11) | GDT_READ | (0xF << 16)
 
-    gdt64_ptr:
+    .Lgdt64_ptr:
         .word . - .Lgdt64
         .long .Lgdt64
 
@@ -86,7 +86,7 @@
         mov cr0, eax
 
         # Load GDT with 64-bit code segment.
-        lgdt gdt64_ptr
+        lgdt .Lgdt64_ptr
 
         # Load prepared code segment with index 1 with RPL=0 from GDT: segment selector is 0b1000 = 0x8.
         ljmp 0x8:.Lret
@@ -119,6 +119,12 @@
         # Reset to the same stack, but use its virtual address instead.
         lea rsp, .Lbootstrap_stack
         add rsp, rbx
+
+        # Fix GDT pointer.
+        lea rax, .Lgdt64
+        add rax, rbx
+        mov qword ptr [.Lgdt64_ptr + 2], rax
+        lgdt .Lgdt64_ptr
 
         # If kernel_main occasionally returns, kernel_main_return will be called.
         lea rax, kernel_main_return

@@ -50,8 +50,5 @@ void kernel_main(early_data_t* early_data) {
 
     frame_alloc_init();
 
-    vmem_t vmem;
-    vmem_init_from_current(&vmem);
-
     x86_hlt_forever();
 }

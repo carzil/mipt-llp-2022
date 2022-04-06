@@ -7,7 +7,7 @@
 struct acpi_sdt* acpi_lookup_sdt(struct acpi_sdt* root, const char* signature) {
     size_t sz = (root->header.length - sizeof(root->header)) / 4;
     for (size_t i = 0; i < sz; i++) {
-        struct acpi_sdt* sdt = (void*)(uint64_t)root->entries[i];
+        struct acpi_sdt* sdt = PHYS_TO_VIRT((void*)(uint64_t)root->entries[i]);
         if (memcmp(signature, &sdt->header.signature, 4) == 0) {
             return sdt;
         }
