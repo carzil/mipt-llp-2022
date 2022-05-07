@@ -13,11 +13,16 @@
 ## Лекции
 1. [Вводная](lectures/00-intro/main.pdf).
 1. [Обзор x86-64](lectures/01-x86-64-overview/main.pdf).
-1. Лекция-семинар. Multiboot2 и загрузка ОС.
+1. Cеминар. Multiboot2 и загрузка ОС.
 1. [Прерывания процессора](lectures/03-interrupts/main.pdf).
-1. Лекция-семинар. Прерывания процессора, ACPI, APIC.
+1. Cеминар. Прерывания процессора, ACPI, APIC.
 1. [Управление памятью](lectures/05-memory-management/main.pdf).
+1. [Процессы и переключение контекста](lectures/07-tasks/main.md)
+1. Семинар.
+1. [Мультипроцессорность и модель памяти x86](lectures/09-mp/main.pdf)
+1. Семинар.
 1. [Шины и диски](lectures/11-buses-and-drivers/main.pdf)
+1. [Блочные устроства, файловые системы и VFS](lectures/12-file-systems/main.pdf)
 
 ## Домашние задания
 
